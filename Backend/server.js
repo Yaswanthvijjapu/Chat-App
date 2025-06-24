@@ -15,10 +15,20 @@ const PushSubscription = require('./models/pushMessageSubscription.model')
 
 const PORT = process.env.PORT || 5000
 
+const allowedOrigins = [
+  "http://localhost:5173",
+];
+
 app.use(cors({
-    origin: ["https://amit-chathub.netlify.app",'http://localhost:5173', 'http://localhost:3000', "http://192.168.181.232:5173"],
-    credentials: true
-}))
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 
 app.use(cookieParser())
 app.use(express.json())
